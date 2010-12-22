@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>hydrate! (Ottoman::Persister)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/ottoman/persister.rb, line 37</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hydrate!</span>(<span class="ruby-identifier">attributes</span>, <span class="ruby-identifier">model</span>)
+      <span class="ruby-identifier">properties</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>]
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_attribute</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span>)
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_attribute</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">associations</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">association_attributes</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>]
+          <span class="ruby-identifier">association_class_name</span> = <span class="ruby-identifier">association_attributes</span>[<span class="ruby-value str">'class_name'</span>]
+          <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">persister</span>(<span class="ruby-identifier">association_class_name</span>).<span class="ruby-identifier">hydrate!</span>(<span class="ruby-identifier">association_attributes</span>, <span class="ruby-identifier">association</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">association_class_name</span>).<span class="ruby-identifier">new</span>)
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_association</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">association</span>)
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_association</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">collections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">collection_attributes</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>]
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_collection</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">collection_attributes</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource_attributes</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">resource_class_name</span> = <span class="ruby-identifier">resource_attributes</span>[<span class="ruby-value str">'class_name'</span>]
+            <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">persister</span>(<span class="ruby-identifier">resource_class_name</span>).<span class="ruby-identifier">hydrate!</span>(<span class="ruby-identifier">resource_attributes</span>, <span class="ruby-identifier">resource</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">resource_class_name</span>).<span class="ruby-identifier">new</span>)
+            <span class="ruby-identifier">resource</span>
+          <span class="ruby-keyword kw">end</span>)
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">model</span>.<span class="ruby-identifier">set_collection</span>(<span class="ruby-identifier">name</span>, [])
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">model</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

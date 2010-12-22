@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>apply! (Ottoman::AutoViews)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/ottoman/auto_views.rb, line 9</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">apply!</span>(<span class="ruby-identifier">session</span>)
+      <span class="ruby-identifier">design</span> = <span class="ruby-identifier">session</span>.<span class="ruby-identifier">document!</span>(<span class="ruby-node">&quot;_design/#{@class_name}&quot;</span>)
+      <span class="ruby-identifier">design</span>[<span class="ruby-value str">'language'</span>] <span class="ruby-operator">||=</span> <span class="ruby-value str">'javascript'</span>
+      <span class="ruby-identifier">design</span>[<span class="ruby-value str">'views'</span>] <span class="ruby-operator">||=</span> {}
+      <span class="ruby-ivar">@views</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">view_name</span>, <span class="ruby-identifier">map</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">view_name</span> = <span class="ruby-identifier">view_name</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">design</span>[<span class="ruby-value str">'views'</span>][<span class="ruby-identifier">view_name</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@design</span>[<span class="ruby-value str">'views'</span>][<span class="ruby-identifier">view_name</span>][<span class="ruby-value str">'map'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">map</span>
+          <span class="ruby-identifier">design</span>[<span class="ruby-value str">'views'</span>][<span class="ruby-identifier">view_name</span>] = { <span class="ruby-value str">'map'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">map</span> }
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">design</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

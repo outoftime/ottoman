@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'irb'
+require 'rubygems'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'ottoman')
+
+Ottoman.configure('hostname' => 'localhost', 'port' => 5984, 'database' => 'console_db')
+
+IRB.start
